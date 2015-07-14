@@ -9,6 +9,9 @@ package bootstrap.liftweb
 
 import java.util.concurrent.TimeUnit
 
+import gie.utils.prop.{Configuration, PropsFromClassLoaderBundle, WithMemo}
+import gie.yabb.db.Database
+
 //import akka.actor.{ActorSystem, Props}
 //import akka.util.Timeout
 
@@ -30,7 +33,7 @@ class Boot {
   def boot {
 
     // where to search snippet
-    LiftRules.addToPackages("gie.igbb.web")
+    LiftRules.addToPackages("gie.yabb.snippets")
     //LiftRules.addToPackages(gie.lift.menu.SNIPPET_PATH)
     LiftRules.cometRequestTimeout = Full(25)
     LiftRules.maxMimeSize = 2 * 10 * 1024 *1024
@@ -92,7 +95,11 @@ class Boot {
 
 //    implicit val timeout = Timeout(5, TimeUnit.SECONDS)
 
-//    implicit object config extends Configuration( new PropsFromClassLoaderBundle("application.properties") with WithMemo )
+    implicit object config extends Configuration( new PropsFromClassLoaderBundle("application.properties") with WithMemo )
+
+    val db = new Database(s"jdbc:h2:${implicitly[Configuration].get('db_path)};AUTO_SERVER=TRUE;TRACE_LEVEL_FILE=2")
+
+    LiftRules.unloadHooks.append(()=>db.close())
 
 //    implicit val db = new IGBBDatabase(s"jdbc:h2:${implicitly[Configuration].get('db_path)};AUTO_SERVER=TRUE;TRACE_LEVEL_FILE=2")
 

@@ -28,10 +28,12 @@ libraryDependencies ++= {
 libraryDependencies ++= {
   val scalaLoggingV = "3.1.0"
   val h2V =  "1.3.176"
+  val scalazV = "7.1.3"
   Seq(
     "org.specs2"          %%  "specs2-core"   % "2.3.11" % "test",
     "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingV,
-    "com.h2database" % "h2" % h2V
+    "com.h2database" % "h2" % h2V,
+    "org.scalaz" %% "scalaz-core" % scalazV
   )
 }
 
