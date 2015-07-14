@@ -9,8 +9,8 @@ package bootstrap.liftweb
 
 import java.util.concurrent.TimeUnit
 
-import akka.actor.{ActorSystem, Props}
-import akka.util.Timeout
+//import akka.actor.{ActorSystem, Props}
+//import akka.util.Timeout
 
 import net.liftweb._
 import util._

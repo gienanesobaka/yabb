@@ -31,7 +31,7 @@ libraryDependencies ++= {
   Seq(
     "org.specs2"          %%  "specs2-core"   % "2.3.11" % "test",
     "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingV,
-    "com.h2database" % "h2" % h2V,
+    "com.h2database" % "h2" % h2V
   )
 }
 
