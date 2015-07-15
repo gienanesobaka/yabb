@@ -59,14 +59,6 @@ object SlickProfile extends LazyLogging {
 
     }
 
-
-
-
-
-//    dbAction.map{ schema=>
-//      schema.fold(DBIO.successful[Unit]())((s:driver.SchemaDescription)=>DBIO.seq(s.create))
-//
-//    }
   }
 
 
