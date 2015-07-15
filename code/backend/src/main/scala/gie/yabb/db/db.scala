@@ -21,19 +21,17 @@ class Database(connectionURL: String)(implicit executor: ExecutionContext) exten
   }
 
   // ctor
-  Await.result( db.run(DBIO.seq(SlickProfile.setSerializableForTransaction, SlickProfile.createIfNotExists(map.bm.tableUser.q))), 30.seconds)
+  ctor()
   //
 
   def close(): Unit ={
     db.close()
   }
 
-  def DDL() =  {
-    val appSchema = map.bm.tableUser.q
-
-    //DBIO.seq(appSchema.create)
-
-    appSchema
+  def ctor(): Unit ={
+    val createTablesAction = SlickProfile.createIfNotExists(map.bm.User.q)
+    Await.result( db.run(DBIO.seq(SlickProfile.setSerializableForTransaction, createTablesAction)), 30.seconds)
   }
+
 
 }

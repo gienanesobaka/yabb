@@ -13,6 +13,6 @@ class User(tag: Tag) extends Table[yabb.bm.User](tag, "USER") {
   def * = (id, name, password) <> (yabb.bm.User.tupled, yabb.bm.User.unapply)
 }
 
-object tableUser extends {
+object User extends {
   val q = TableQuery[User]
 }
