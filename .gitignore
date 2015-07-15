@@ -5,3 +5,5 @@ local.properties
 .navigation
 proguard-sbt.txt
 .idea
+code/trace.db
+

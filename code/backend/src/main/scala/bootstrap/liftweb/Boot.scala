@@ -1,19 +1,7 @@
 package bootstrap.liftweb
 
-//import gie.igbb.service.MediaStore
-//import gie.igbb.database.{IGBBDatabase, MediaFileEntryTableDef, CloudTagEntryDef, CloudTagLinkDef}
 
-//import gie.igbb.database.{SlickProfile, IGBBDatabase}
-//import gie.utils.prop.{Configuration, WithMemo, PropsFromClassLoaderBundle}
-
-
-import java.util.concurrent.TimeUnit
-
-import gie.utils.prop.{Configuration, PropsFromClassLoaderBundle, WithMemo}
-import gie.yabb.db.Database
-
-//import akka.actor.{ActorSystem, Props}
-//import akka.util.Timeout
+import gie.yabb.app
 
 import net.liftweb._
 import util._
@@ -80,36 +68,7 @@ class Boot {
     //net.liftmodules.FoBo.InitParam.ToolKit = net.liftmodules.FoBo.Bootstrap231
     //net.liftmodules.FoBo.init()
 
-    // Make a transaction span the whole HTTP request
-    //S.addAround(DB.buildLoanWrapper)
-    
-//    LiftRules.dispatch.append(code.model.ContentServe)
-//    LiftRules.dispatch.append(code.model.ContentLstServe)
-    //LiftRules.dispatch.append(code.rest.file_upload.uploadRest)
-
-//    implicit val system = {
-      //val sys = ActorSystem("igbb-system")
-//      LiftRules.unloadHooks.append(()=>sys.shutdown())
-//      sys
-//    }
-
-//    implicit val timeout = Timeout(5, TimeUnit.SECONDS)
-
-    implicit object config extends Configuration( new PropsFromClassLoaderBundle("application.properties") with WithMemo )
-
-    val db = new Database(s"jdbc:h2:${implicitly[Configuration].get('db_path)};AUTO_SERVER=TRUE;TRACE_LEVEL_FILE=2")
-
-    LiftRules.unloadHooks.append(()=>db.close())
-
-//    implicit val db = new IGBBDatabase(s"jdbc:h2:${implicitly[Configuration].get('db_path)};AUTO_SERVER=TRUE;TRACE_LEVEL_FILE=2")
-
-//    db.slickHandle.withTransaction{ implicit session=>
-//      SlickProfile.setSerializableForTransaction()
-//      SlickProfile.createIfNotExists(MediaFileEntryTableDef.value, CloudTagEntryDef.value, CloudTagLinkDef.value)
-//    }
-
-    //val mediaStore = implicitly[ActorSystem].actorOf(Props(classOf[MediaStore], implicitly[IGBBDatabase], implicitly[Timeout]), "media-store")
-    //val service = implicitly[ActorSystem].actorOf(Props(classOf[ImageServiceActor], mediaStore), "demo-service")
-
+    app.boot()
+    LiftRules.unloadHooks.append(app.close)
   }
 }
