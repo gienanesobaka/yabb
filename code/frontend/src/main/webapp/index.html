@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <title>Hello AngularJS</title>
+        <meta charset="UTF-8">
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script type="text/javascript" src="yabb-frontend-fastopt.js"></script>
+        <script type="text/javascript">
+            gie.yabb.app().main();
+        </script>
+    </head>
+    <body ng-app="yabb">
+        <div ng-controller="gie.yabb.TestController as ctrl">
+
+            <button onclick="gie.yabb.app().clickedButton()">Button</button>
+            <button ng-click="ctrl.printMsg()">Button</button>
+            <p>Enter Name: <input type="text" ng-model="ctrl.msg"> </p>
+            <p>Hello {{ctrl.msg}}!!</p>
+
+        </div>
+    </body>
+</html>

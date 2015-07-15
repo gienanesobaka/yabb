@@ -6,6 +6,7 @@ scalaVersion  := "2.11.7"
 
 enablePlugins(ScalaJSPlugin)
 
-unmanagedSourceDirectories in Compile += baseDirectory.value / "../shared" 
+unmanagedSourceDirectories in Compile += baseDirectory.value / "../shared"
 
+libraryDependencies += "biz.enef" %%% "scalajs-angulate" % "0.2.1"
 
