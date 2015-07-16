@@ -10,7 +10,6 @@ import scala.scalajs.js.annotation.JSExport
 
 object app extends JSApp {
 
-  @JSExport
   def main(): Unit = {
     println("gie.yabb.app.main()")
 
@@ -27,7 +26,7 @@ object app extends JSApp {
 }
 
 
-@JSExport
+
 class TestController extends Controller {
   var msg:String = "NoName"
   def printMsg(): Unit ={

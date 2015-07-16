@@ -51,4 +51,6 @@ libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.1.2" % "compile
 
 libraryDependencies += "org.slf4j" % "log4j-over-slf4j" % "1.7.7"
 
+libraryDependencies += "com.lihaoyi" %% "upickle" % "0.3.4"
+
 //Revolver.settings
