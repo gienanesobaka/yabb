@@ -2,44 +2,53 @@ package gie.yabb.states.login
 
 import angulate.uirouter.{StateService, View, State, StateProvider}
 import biz.enef.angulate.Module.RichModule
-import biz.enef.angulate.{Controller, Service}
-import gie.yabb.StateHelpers
+import biz.enef.angulate.{Scope, Controller, Service}
+import gie.yabb.{helpers, StateHelpers}
 import gie.yabb.authentication.AuthenticationService
+import scala.scalajs.js.annotation.JSExport
+import scalajs.js
 
 
 object state {
 
-  import StateHelpers._
 
-  val name = "login"
-  val dirName = name
-  val controllerName = classOf[AuthenticationController].getName
-  def view(parentPartsDirectory:String) = View(s"${getPartsDirectory(parentPartsDirectory,dirName)}/part-index.html", controllerName)
+  def build(module: RichModule, parentFullStateName:String, placeAtView:String): Unit ={
 
+    val fullStateName = StateHelpers.getFullStateName(parentFullStateName, "login")
 
-  def apply(module: RichModule, viewName:String, partsDirectory:String): RichModule= {
+    val stateControllerName = (s"${fullStateName}-AuthenticationController")
 
+    println("GEN NEW CONTROLLER: "+stateControllerName)
+    module.controller(
+      stateControllerName,
+      (authenticationService: AuthenticationService, $state: StateService, $scope:Scope)=>{
+        helpers.controllerAs($scope, "authController"){ new AuthenticationController(authenticationService,$state) }
+      }
+    )
 
-    //module.controller()
+    module.config( ($stateProvider:StateProvider) => {
+      $stateProvider.state(
+        fullStateName,
+        State(
+          url="/login",
+          views=Map(
+            placeAtView -> View("parts/part-login.html", stateControllerName))))
+    })
 
-    module.controllerOf[AuthenticationController]
-
-    module.config{ ($stateProvider:StateProvider)=>
-
-    }
-
-
-    module
   }
-
-
 }
 
 
+
 class AuthenticationController(authenticationService: AuthenticationService, $state: StateService) extends Controller {
+
+  @JSExport
+  def isAuthenticated() = authenticationService.isAuthenticated
+
+
 //  if(authenticationService.isAuthenticated)
-//    $state.go(state.states.names.notAuthenticated)
+//    $state.go("state.states.names.notAuthenticated")
 //  else
-//    $state.go(state.states.names.authenticated)
+//    $state.go("state.states.names.authenticated")
 
 }

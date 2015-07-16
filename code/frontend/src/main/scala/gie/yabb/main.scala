@@ -7,6 +7,7 @@ import biz.enef.angulate._
 import biz.enef.angulate.{Scope, Controller}
 import angulate.uirouter._
 import gie.yabb.authentication.AuthenticationService
+import gie.yabb.states.login.AuthenticationController
 
 
 import scala.scalajs.js.JSApp
@@ -23,9 +24,13 @@ object app extends JSApp {
 
     module.serviceOf[AuthenticationService]
 
-    module.controllerOf[TestController]
+    module.
+      controllerOf[TestController].
+      controllerOf[AuthenticationController]
 
-    gie.yabb.states.root.state(module, "main-view","")
+
+    states.login.state.build(module, null, "main-view")
+
 
     module.run{ ($state:StateService) =>
       //$state.go(gie.yabb.main.States.names.default)
