@@ -9,7 +9,7 @@
         <script type="text/javascript" src="js/yabb-frontend-fastopt.js"></script>
         <script type="text/javascript" src="js/yabb-frontend-launcher.js"></script>
     </head>
-    <body ng-app="yabb">
+    <body ng-app="gie.yabb">
         <div ng-controller="gie.yabb.TestController as ctrl">
 
             <button onclick="gie.yabb.app().clickedButton()">Button</button>
@@ -18,5 +18,11 @@
             <p>Hello {{ctrl.msg}}!!</p>
 
         </div>
+
+        <!--<div ng-controller="gie.yabb.MainViewController as ctrl">-->
+            <div ui-view="main-view"></div>
+            <a ui-sref="login">Login</a>
+        <!--</div>-->
+
     </body>
 </html>
