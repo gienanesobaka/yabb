@@ -20,7 +20,7 @@ object app extends JSApp {
   def main(): Unit = {
     println("gie.yabb.app.main()")
 
-    val module = angular.createModule("gie.yabb", Seq("ui.router"))
+    val module = angular.createModule("gie.yabb", Seq("ngCookies", "ui.router"))
 
     module.serviceOf[AuthenticationService]
 
@@ -31,6 +31,9 @@ object app extends JSApp {
 
     states.login.state.build(module, null, "main-view")
 
+    module.config{ ($urlRouterProvider:UrlRouterProvider)=>
+      $urlRouterProvider.otherwise("/")
+    }
 
     module.run{ ($state:StateService) =>
       //$state.go(gie.yabb.main.States.names.default)

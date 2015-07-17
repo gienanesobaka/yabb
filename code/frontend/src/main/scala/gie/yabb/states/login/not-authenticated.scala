@@ -6,7 +6,8 @@ import biz.enef.angulate.{Controller, Scope}
 import gie.yabb.{helpers, StateHelpers}
 import gie.yabb.authentication.AuthenticationService
 
-import scala.scalajs.js.annotation.JSExport
+import scala.scalajs.js
+import scala.scalajs.js.annotation.{JSExportAll, JSExport}
 
 object state {
 
@@ -17,9 +18,13 @@ object state {
     val stateControllerName = (s"${fullStateName}--NotAuthenticatedController")
 
     println("GEN NEW CONTROLLER: "+stateControllerName)
+
     module.controller(
       stateControllerName,
       (authenticationService: AuthenticationService, $state: StateService, $scope:Scope)=>{
+        $scope.asInstanceOf[js.Dynamic].login = ""
+        $scope.asInstanceOf[js.Dynamic].password = ""
+
         helpers.controllerAs($scope, "notAuthController"){ new NotAuthenticatedController(authenticationService,$state) }
       }
     )
@@ -28,7 +33,8 @@ object state {
       $stateProvider.state(
         fullStateName,
         State(
-          url=null,
+          url="/authenticate",
+          controllerAs = "notAuthController",
           views=Map(
             placeAtView -> View("parts/part-do-login.html", stateControllerName))))
     })
@@ -40,7 +46,12 @@ object state {
 
 
 
+@JSExportAll
 class NotAuthenticatedController(authenticationService: AuthenticationService, $state: StateService) extends Controller {
 
+  def authenticate(login: String, password: String): Unit ={
+    authenticationService.authenticate(login, password)
+    $state.go("login")
+  }
 
 }

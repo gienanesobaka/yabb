@@ -4,6 +4,7 @@ import angulate.uirouter.{StateService, View, State, StateProvider}
 import biz.enef.angulate.Module.RichModule
 import biz.enef.angulate.{Scope, Controller, Service}
 import gie.yabb.{helpers, StateHelpers}
+import gie.yabb.helpers.controllerAs
 import gie.yabb.authentication.AuthenticationService
 import gie.yabb.states
 import scala.scalajs.js.annotation.JSExport
@@ -26,7 +27,7 @@ object state {
     module.controller(
       stateControllerName,
       (authenticationService: AuthenticationService, $state: StateService, $scope:Scope)=>{
-        helpers.controllerAs($scope, "authController"){ new AuthenticationController(authenticationService,$state, notAuthenticatedStateName) }
+        controllerAs($scope, "authController"){ new AuthenticationController(authenticationService,$state, notAuthenticatedStateName) }
       }
     )
 
