@@ -2,27 +2,29 @@
     <head>
         <title>Hello AngularJS</title>
         <meta charset="UTF-8">
-        <!--<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>-->
-        <!--<script src="js/angular-ui-router.min.js"></script>-->
-        <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>-->
         <script type="text/javascript" src="js/yabb-frontend-jsdeps.js"></script>
         <script type="text/javascript" src="js/yabb-frontend-fastopt.js"></script>
         <script type="text/javascript" src="js/yabb-frontend-launcher.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
     </head>
     <body ng-app="gie.yabb">
-        <div ng-controller="gie.yabb.TestController as ctrl">
 
-            <button onclick="gie.yabb.app().clickedButton()">Button</button>
-            <button ng-click="ctrl.printMsg()">Button</button>
-            <p>Enter Name: <input type="text" ng-model="ctrl.msg"> </p>
-            <p>Hello {{ctrl.msg}}!!</p>
+        <div class="container-fluid">
+            <div ng-controller="gie.yabb.TestController as ctrl">
 
+                <button onclick="gie.yabb.app().clickedButton()">Button</button>
+                <button ng-click="ctrl.printMsg()">Button</button>
+                <p>Enter Name: <input type="text" ng-model="ctrl.msg"> </p>
+                <p>Hello {{ctrl.msg}}!!</p>
+
+            </div>
+
+            <hr/>
+
+            <div ng-view></div>
         </div>
-
-        <!--<div ng-controller="gie.yabb.MainViewController as ctrl">-->
-            <div ui-view="main-view"></div>
-            <a ui-sref="login">Login</a>
-        <!--</div>-->
 
     </body>
 </html>

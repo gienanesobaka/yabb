@@ -12,7 +12,7 @@ class AuthenticationService($cookies: CookiesService) extends Service {
 
   private var m_isAuthenticated = false
 
-  def isAuthenticated: Boolean = m_isAuthenticated
+  def isAuthenticated(): Boolean = m_isAuthenticated
 
   def authenticate(login: String, password: String): Unit ={
     println("LOGIN: "+login)

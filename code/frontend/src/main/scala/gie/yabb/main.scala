@@ -1,13 +1,11 @@
 package gie.yabb
 
 
-import gie.utils.ImplicitPipe._
+import biz.enef.angulate.ext.{Route, RouteProvider}
 
 import biz.enef.angulate._
 import biz.enef.angulate.{Scope, Controller}
-import angulate.uirouter._
-import gie.yabb.authentication.AuthenticationService
-import gie.yabb.states.login.AuthenticationController
+import gie.yabb.authentication.{AuthenticationService, MainAuthenticationController}
 
 
 import scala.scalajs.js.JSApp
@@ -17,26 +15,30 @@ import scala.scalajs.js.annotation.JSExport
 
 object app extends JSApp {
 
+  private val parts = "parts"
+
   def main(): Unit = {
     println("gie.yabb.app.main()")
 
-    val module = angular.createModule("gie.yabb", Seq("ngCookies", "ui.router"))
+    val module = angular.createModule("gie.yabb", Seq("ngCookies", "ngRoute"))
 
     module.serviceOf[AuthenticationService]
 
     module.
       controllerOf[TestController].
-      controllerOf[AuthenticationController]
+      controllerOf[MainAuthenticationController]
 
 
-    states.login.state.build(module, null, "main-view")
-
-    module.config{ ($urlRouterProvider:UrlRouterProvider)=>
-      $urlRouterProvider.otherwise("/")
+    module.config{ ($routeProvider: RouteProvider)=>
+      $routeProvider.
+        when("/authenticate",
+          Route(templateUrl = s"${parts}/authentication.html", controllerAs = "controller", controller = classOf[MainAuthenticationController].getName)).
+        otherwise(
+          Route(redirectTo = "/"))
     }
 
-    module.run{ ($state:StateService) =>
-      //$state.go(gie.yabb.main.States.names.default)
+    module.run{ ()=>
+
     }
 
   }
