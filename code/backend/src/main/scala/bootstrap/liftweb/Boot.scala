@@ -2,6 +2,7 @@ package bootstrap.liftweb
 
 
 import gie.yabb.app
+import gie.yabb.rest.authentication
 
 import net.liftweb._
 import util._
@@ -65,8 +66,7 @@ class Boot {
     // Use HTML5 for rendering
     LiftRules.htmlProperties.default.set((r: Req) => new Html5Properties(r.userAgent))
 
-    //net.liftmodules.FoBo.InitParam.ToolKit = net.liftmodules.FoBo.Bootstrap231
-    //net.liftmodules.FoBo.init()
+    LiftRules.dispatch.append(authentication)
 
     app.boot()
     LiftRules.unloadHooks.append(app.close)

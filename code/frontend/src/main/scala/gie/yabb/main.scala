@@ -12,6 +12,14 @@ import scala.scalajs.js.JSApp
 import scala.scalajs.js.annotation.JSExport
 
 
+object serverApi {
+  val prefix = "/app/api/"
+  object api {
+    object authentication {
+      val authenticate = s"${prefix}authentication/authenticate"
+    }
+  }
+}
 
 object app extends JSApp {
 

@@ -2,7 +2,7 @@ name := "yabb-backend"
 
 //lazy val root = (project in file("."))
 
-//unmanagedSourceDirectories in Compile += baseDirectory.value / "../igbb-shared"
+unmanagedSourceDirectories in Compile += baseDirectory.value / "../shared"
 
 version       := "0.1"
 
