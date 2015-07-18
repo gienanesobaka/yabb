@@ -2,6 +2,7 @@ package gie.yabb
 
 import gie.utils.prop.{WithMemo, PropsFromClassLoaderBundle, Configuration}
 import gie.yabb.db.Database
+import gie.yabb.messages.{AuthenticationResponse, AuthenticationRequest}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -17,6 +18,11 @@ object app {
 
   def close(): Unit = {
     db.close()
+  }
+
+  def authenticate(request: AuthenticationRequest): AuthenticationResponse = {
+
+    AuthenticationResponse(true)
   }
 
 }
