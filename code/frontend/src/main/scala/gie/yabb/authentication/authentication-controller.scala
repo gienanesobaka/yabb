@@ -18,19 +18,33 @@ class MainAuthenticationController(authenticationService: AuthenticationService,
   @JSExport
   var authError: String = ""
 
+  private var m_busy = false
+
+  def isBusy():Boolean ={
+    m_busy
+  }
+
   def authenticate(): Unit = {
+
+    m_busy = true
+
+    def reevaluateOnResult(): Unit ={
+        m_busy = false
+        $scope.$apply()
+    }
+
     authenticationService.authenticate(login, password).onComplete{
       case Failure(ex)=>
         authError = s"Error while processing authentication: ${ex.toString}"
-        $scope.$apply()
+        reevaluateOnResult()
 
       case Success(AuthenticationResponse(false)) =>
         authError = s"Invalid authentication credentials provided."
-        $scope.$apply()
+        reevaluateOnResult()
 
       case Success(AuthenticationResponse(true)) =>
         assume(authenticationService.isAuthenticated())
-        $scope.$apply()
+        reevaluateOnResult()
     }
   }
 
