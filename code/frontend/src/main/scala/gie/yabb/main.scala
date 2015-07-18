@@ -23,6 +23,8 @@ object serverApi {
 
 object app extends JSApp {
 
+  implicit val executionContext = scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
+
   private val parts = "parts"
 
   def main(): Unit = {

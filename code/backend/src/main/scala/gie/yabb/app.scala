@@ -21,8 +21,7 @@ object app {
   }
 
   def authenticate(request: AuthenticationRequest): AuthenticationResponse = {
-
-    AuthenticationResponse(true)
+    if(request.login=="bad" || request.login.isEmpty || request.password.isEmpty) AuthenticationResponse(false) else AuthenticationResponse(true)
   }
 
 }
