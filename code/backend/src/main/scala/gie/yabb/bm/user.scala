@@ -1,3 +1,8 @@
 package gie.yabb.bm
 
-case class User(id: Long, name: String, password: String)
+import java.util.UUID
+
+case class User(id: Long, uuid:UUID, name: String, password: String)
+
+case class UserPrivilege(id: UUID, userID: Long)
+

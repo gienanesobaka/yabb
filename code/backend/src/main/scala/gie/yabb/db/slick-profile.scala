@@ -73,6 +73,7 @@ object SlickProfile extends LazyLogging {
 
   object dbDefaultColumnNames {
     val id = "ID"
+    val uuid = "UUID"
   }
 
 }

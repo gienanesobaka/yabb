@@ -43,7 +43,7 @@ class MainAuthenticationController(authenticationService: AuthenticationService,
         reevaluateOnResult()
 
       case Success(AuthenticationResponse(true)) =>
-        assume(authenticationService.isAuthenticated())
+        assume(isAuthenticated())
         reevaluateOnResult()
     }
   }
