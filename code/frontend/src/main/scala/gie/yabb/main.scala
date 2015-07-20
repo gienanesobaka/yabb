@@ -34,16 +34,19 @@ object app extends JSApp {
 
     module.serviceOf[AuthenticationService]
 
-    module.
-      controllerOf[TestController].
-      controllerOf[MainAuthenticationController]
+    module
+      .controllerOf[TestController]
+      .controllerOf[RegistrationController]
+      .controllerOf[MainAuthenticationController]
 
 
     module.config{ ($routeProvider: RouteProvider)=>
-      $routeProvider.
-        when("/authenticate",
-          Route(templateUrl = s"${parts}/authentication.html", controllerAs = "controller", controller = classOf[MainAuthenticationController].getName)).
-        otherwise(
+      $routeProvider
+        .when("/authenticate",
+          Route(templateUrl = s"${parts}/authentication.html", controllerAs = "controller", controller = classOf[MainAuthenticationController].getName))
+        .when("/register",
+          Route(templateUrl = s"${parts}/register.html", controllerAs = "controller", controller = classOf[RegistrationController].getName))
+        .otherwise(
           Route(redirectTo = "/"))
     }
 

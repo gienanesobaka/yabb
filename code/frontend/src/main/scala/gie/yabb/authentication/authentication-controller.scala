@@ -1,5 +1,6 @@
 package gie.yabb.authentication
 
+import biz.enef.angulate.core.Location
 import biz.enef.angulate.{Scope, Controller}
 import gie.yabb.messages.AuthenticationResponse
 
@@ -8,7 +9,7 @@ import scala.scalajs.js.annotation.JSExport
 import scala.util.{Success, Failure}
 
 
-class MainAuthenticationController(authenticationService: AuthenticationService, $scope:Scope) extends Controller {
+class MainAuthenticationController(authenticationService: AuthenticationService, $scope:Scope, $location: Location) extends Controller {
 
   import gie.yabb.app.executionContext
 
@@ -22,6 +23,10 @@ class MainAuthenticationController(authenticationService: AuthenticationService,
 
   def isBusy():Boolean ={
     m_busy
+  }
+
+  def navigateToRegister(): Unit ={
+    $location.path("register")
   }
 
   def authenticate(): Unit = {

@@ -12,11 +12,13 @@ class User(tag: Tag) extends Table[yabb.bm.User](tag, "USER") {
   def uuid = column[UUID](dbDefaultColumnNames.uuid)
   def name = column[String]("NAME", O.SqlType(dbTypeNames.varchar(255)))
   def password = column[String]("PASSWORD", O.SqlType(dbTypeNames.varchar(255)))
+  def email = column[String]("EMAIL", O.SqlType(dbTypeNames.varchar(255)))
+  def active = column[Boolean]("IS_ACTIVE")
 
   def idx_uuid = index("IDX_UUID", uuid, unique = true)
   def idx_name = index("IDX_NAME", name, unique = true)
 
-  def * = (id, uuid, name, password) <> (yabb.bm.User.tupled, yabb.bm.User.unapply)
+  def * = (id, uuid, name, password, email, active) <> (yabb.bm.User.tupled, yabb.bm.User.unapply)
 }
 
 object User extends {
@@ -31,7 +33,7 @@ class UserPrivilege(tag: Tag) extends Table[yabb.bm.UserPrivilege](tag, "USER_PR
   def idx_id = index("IDX_ID", id, unique = false)
   def idx_userId = index("IDX_USERID", userId, unique = false)
 
-  def fk_user = foreignKey("FK_USER", userId, User.q)(_.id)
+  def fk_user = foreignKey(s"FK_${tableName}_USER", userId, User.q)(_.id)
 
   def * = (id, userId) <> (yabb.bm.UserPrivilege.tupled, yabb.bm.UserPrivilege.unapply)
 }
