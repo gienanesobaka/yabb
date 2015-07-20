@@ -6,9 +6,11 @@ import com.typesafe.scalalogging.StrictLogging
 import com.zaxxer.hikari.{HikariDataSource, HikariConfig}
 import gie.security.privileges.PRIV_ROOT
 import gie.yabb.bm.{User, UserPrivilege}
+import slick.dbio.{NoStream}
 
-import scala.concurrent.{ExecutionContext, Await}
+import scala.concurrent.{Future, ExecutionContext, Await}
 import scala.concurrent.duration._
+import slick.dbio
 
 class Database(connectionURL: String)(implicit executor: ExecutionContext) extends StrictLogging {
 
@@ -31,6 +33,8 @@ class Database(connectionURL: String)(implicit executor: ExecutionContext) exten
   def close(): Unit ={
     db.close()
   }
+
+  def run[R](a: DBIOAction[R, NoStream, Nothing]): Future[R] = db.run(a)
   
   private def createAdminAccount() = {
 
@@ -56,6 +60,18 @@ class Database(connectionURL: String)(implicit executor: ExecutionContext) exten
     val createTablesAction = SlickProfile.createIfNotExists(mappings.User.q, mappings.UserPrivilege.q)
     Await.result( db.run(DBIO.seq(SlickProfile.setSerializableForTransaction, createTablesAction, createAdminAccount()).transactionally), 30.seconds)
   }
+
+
+  def selectUserWithPrivileges(name: String) = {
+
+    mappings.User.q.filter(_.name === name).result.headOption.flatMap{ userOpt=>
+
+      userOpt.map(user=> mappings.UserPrivilege.q.filter(_.userId === user.id).result.map( (user,_)  ) ) match {
+        case Some( userInfoAction ) => userInfoAction.map( Some(_) )
+        case None                   => DBIO.successful(None)
+      }
+    }
+ }
 
 
 }

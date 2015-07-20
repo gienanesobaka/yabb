@@ -6,10 +6,11 @@ package security {
 
 
 import java.util
+import java.util.UUID
 
 class SecurityException extends Exception
-  class AccessDeniedException(userUUID: gie.UUID) extends SecurityException
-  class PrivilegeNotHeldException(userUUID: gie.UUID, required: UserPrivilege) extends AccessDeniedException(userUUID)
+  class AccessDeniedException(userUUID: UUID) extends SecurityException
+  class PrivilegeNotHeldException(userUUID: UUID, required: UserPrivilege) extends AccessDeniedException(userUUID)
 
   trait UserPrivilege {
     val id:util.UUID
