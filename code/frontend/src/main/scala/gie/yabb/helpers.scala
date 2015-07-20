@@ -15,9 +15,7 @@ class HttpPromiseWrapper[T](wrapped: HttpPromise[T]) extends Future[T] {
   private val m_promise = Promise[T]()
 
   wrapped.success( ((t:T)=> m_promise.success(t)) )
-  wrapped.error{ (data:Any, status:Int) =>
-    m_promise.failure( new ConnectionException(status, data) )
-  }
+  wrapped.error{ (data:Any, status:Int) => m_promise.failure( new ConnectionException(status, data) ) }
 
   lazy val future = m_promise.future
 
