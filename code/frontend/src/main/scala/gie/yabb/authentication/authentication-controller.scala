@@ -16,7 +16,6 @@ class MainAuthenticationController(authenticationService: AuthenticationService,
   var login:String = ""
   var password:String = ""
 
-  @JSExport
   var authError: String = ""
 
   private var m_busy = false

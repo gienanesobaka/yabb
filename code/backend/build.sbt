@@ -10,9 +10,12 @@ scalaVersion  := "2.11.7"
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 
+
 fork in run := true
 
 enablePlugins(JettyPlugin)
+
+containerForkOptions := new ForkOptions(runJVMOptions = Seq("-Xdebug", "-agentlib:jdwp=transport=dt_socket,address=5005,server=y,suspend=n"))
 
 libraryDependencies ++= {
   val liftVersion = "2.6.2"

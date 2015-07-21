@@ -32,7 +32,9 @@ object app extends JSApp {
 
     val module = angular.createModule("gie.yabb", Seq("ngCookies", "ngRoute"))
 
-    module.serviceOf[AuthenticationService]
+    module
+      .serviceOf[MarshallingService]
+      .serviceOf[AuthenticationService]
 
     module
       .controllerOf[TestController]
