@@ -22,6 +22,11 @@ class RegistrationController(authenticationService: AuthenticationService, $scop
   $scope.asInstanceOf[js.Dynamic].data = new RegistrationFormScope().asInstanceOf[js.Object]
   $scope.asInstanceOf[js.Dynamic].minPassword=6
 
+  def passwordCheck(): Boolean ={
+    println("OK")
+
+    true
+  }
 
   def register(formData: RegistrationFormScope): Unit ={
     println(s"REQUEST: "+formData)

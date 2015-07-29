@@ -30,7 +30,7 @@ object app extends JSApp {
   def main(): Unit = {
     println("gie.yabb.app.main()")
 
-    val module = angular.createModule("gie.yabb", Seq("ngCookies", "ngRoute"))
+    val module = angular.createModule("gie.yabb", Seq("ngCookies", "ngRoute", "ui.validate"))
 
     module
       .serviceOf[MarshallingService]

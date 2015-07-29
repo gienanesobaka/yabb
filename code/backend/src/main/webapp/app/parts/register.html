@@ -93,7 +93,11 @@
                                            ng-model="data.password2"
                                            class="form-control input-sm"
                                            placeholder="Confirm Password"
-                                           required ng-minlength={{minPassword}}>
+                                           required
+                                           ng-minlength={{minPassword}}
+                                           ui-validate=" '$value==data.password' "  ui-validate-watch=" 'data.password' " >
+
+                                    <span ng-show="registrationForm.password_confirmation.$invalid">Passwords have to macth.</span>
                                 </div>
                             </div>
                         </div>
@@ -103,6 +107,10 @@
                                ng-click='controller.register(data)'
                                ng-disabled="registrationForm.$invalid"
                                class="btn btn-primary btn-block">
+
+                        <!--<pre>{{registrationForm.$error|json}}</pre>-->
+
+                        <!--<pre>{{registrationForm.password_confirmation.$error|json}}</pre>-->
 
                     </form>
                 </div>
