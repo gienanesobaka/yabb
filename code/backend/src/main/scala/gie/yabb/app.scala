@@ -11,7 +11,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 
-object app extends StrictLogging with MarshallerServiceTrait {
+object app extends StrictLogging with MarshallerServiceTrait with RegistrationLogic {
 
   implicit object config extends Configuration( new PropsFromClassLoaderBundle("application.properties") with WithMemo )
 

@@ -39,7 +39,7 @@ class AlertsHolder() extends LazyLogging {
   }
 
   def add(alertType: String, msg: String, timeout: Int = defaultTimeout): Unit ={
-    alerts += AlertInfo(alertType, msg, timeout)
+    alerts.splice(0,0, AlertInfo(alertType, msg, timeout))
   }
 
 
