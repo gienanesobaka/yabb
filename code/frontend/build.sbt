@@ -31,6 +31,8 @@ jsDependencies += ProvidedJS / "validate.min.js" dependsOn "angular.min.js"
 
 jsDependencies += ProvidedJS / "bootstrap.min.js" dependsOn "jquery.min.js"
 
+jsDependencies += ProvidedJS / "ui-bootstrap.min.js" dependsOn ("angular.min.js","bootstrap.min.js")
+
 persistLauncher in Compile := true
 skip in packageJSDependencies := false
 
