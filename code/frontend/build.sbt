@@ -10,6 +10,9 @@ unmanagedSourceDirectories in Compile += baseDirectory.value / "../shared"
 
 libraryDependencies += "biz.enef" %%% "scalajs-angulate" % "0.2.1"
 
+
+libraryDependencies += "biz.enef" %%% "slogging" % "0.3"
+
 libraryDependencies += "com.lihaoyi" %%% "upickle" % "0.3.4"
 
 

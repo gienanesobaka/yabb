@@ -6,6 +6,7 @@ import biz.enef.angulate.core.{HttpPromise, HttpService}
 import biz.enef.angulate.ext.CookiesService
 
 import gie.yabb.app.executionContext
+import slogging.StrictLogging
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
@@ -13,11 +14,11 @@ import gie.yabb.{MarshallingService, serverApi}
 import gie.yabb.messages.{AuthenticationResponse, AuthenticationRequest}
 
 
-class AuthenticationService(marshallingService: MarshallingService) extends Service { self=>
+class AuthenticationService(marshallingService: MarshallingService) extends Service with StrictLogging { self=>
 
   import gie.yabb.YHelpers._
 
-  println("AuthenticationService.ctor()")
+  logger.debug("AuthenticationService.ctor()")
 
   private var m_authenticatedLogin:Option[String] = None
 

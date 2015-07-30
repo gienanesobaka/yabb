@@ -3,8 +3,8 @@ package gie.yabb.messages
 import java.util.UUID
 
 case class RegistrationRequest( authentication:AuthenticationRequest,
-                                firstName: String,
-                                lastName: String,
+                                firstName: Option[String],
+                                lastName: Option[String],
                                 email:String)
 
 

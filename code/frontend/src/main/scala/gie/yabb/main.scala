@@ -6,6 +6,7 @@ import biz.enef.angulate.ext.{Route, RouteProvider}
 import biz.enef.angulate._
 import biz.enef.angulate.{Scope, Controller}
 import gie.yabb.authentication.{AuthenticationService, MainAuthenticationController}
+import slogging._
 
 
 import scala.scalajs.js.JSApp
@@ -21,16 +22,20 @@ object serverApi {
   }
 }
 
-object app extends JSApp {
+object app extends JSApp with LazyLogging {
 
   implicit val executionContext = scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
   private val parts = "parts"
 
   def main(): Unit = {
-    println("gie.yabb.app.main()")
 
-    val module = angular.createModule("gie.yabb", Seq("ngCookies", "ngRoute", "ui.validate"))
+    LoggerConfig.factory = ConsoleLoggerFactory
+    LoggerConfig.level = LogLevel.TRACE
+
+    logger.info("gie.yabb.app.main()")
+
+    val module = angular.createModule("gie.yabb", Seq("ngCookies", "ngRoute", "ui.validate", "ui.bootstrap"))
 
     module
       .serviceOf[MarshallingService]
