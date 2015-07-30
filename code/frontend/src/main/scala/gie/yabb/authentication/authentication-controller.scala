@@ -2,7 +2,7 @@ package gie.yabb.authentication
 
 import biz.enef.angulate.core.Location
 import biz.enef.angulate.{Scope, Controller}
-import gie.yabb.{AlertsHolder, AlertsTypes}
+import gie.yabb.{BusyHolder, AlertsHolder, AlertsTypes}
 import gie.yabb.messages.AuthenticationResponse
 import gie.yabb.app.route
 import slogging.StrictLogging
@@ -24,39 +24,35 @@ class MainAuthenticationController(authenticationService: AuthenticationService,
   var password:String = ""
 
   val alerts = new AlertsHolder()
-
-  private var m_busy = false
-
-  def isBusy():Boolean ={
-    m_busy
-  }
+  val busy = new BusyHolder()
 
   def navigateToRegister(): Unit ={
     route.register.navigate()
   }
 
   def authenticate(): Unit = {
+    busy.incBusy()
 
-    m_busy = true
+    authenticationService.authenticate(login, password).onComplete{ result=>
 
-    def reevaluateOnResult(): Unit ={
-        m_busy = false
-        $scope.$apply()
+      busy.decBusy()
+
+      result match {
+        case Failure(ex)=>
+          alerts.clearAlerts()
+          alerts.addError(logger)(s"Error while processing authentication: ${ex.toString}")
+
+        case Success(AuthenticationResponse(false)) =>
+          alerts.clearAlerts()
+          alerts.addError(logger)(s"Invalid authentication credentials provided.")
+
+        case Success(AuthenticationResponse(true)) =>
+          assume(isAuthenticated())
+      }
+
+      $scope.$apply()
     }
 
-    authenticationService.authenticate(login, password).onComplete{
-      case Failure(ex)=>
-        alerts.replaceAll(AlertsTypes.danger, s"Error while processing authentication: ${ex.toString}")
-        reevaluateOnResult()
-
-      case Success(AuthenticationResponse(false)) =>
-        alerts.replaceAll(AlertsTypes.danger, s"Invalid authentication credentials provided.")
-        reevaluateOnResult()
-
-      case Success(AuthenticationResponse(true)) =>
-        assume(isAuthenticated())
-        reevaluateOnResult()
-    }
   }
 
   def isAuthenticated(): Boolean = {

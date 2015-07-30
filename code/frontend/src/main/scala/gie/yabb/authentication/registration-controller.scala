@@ -6,6 +6,7 @@ import gie.yabb.messages._
 import slogging.LazyLogging
 
 import scala.scalajs.js.annotation.JSExportAll
+import scala.util.{Success, Failure}
 import scalajs.js
 
 @JSExportAll
@@ -20,8 +21,13 @@ case class RegistrationFormScope(
 
 class RegistrationController(authenticationService: AuthenticationService, $scope:Scope) extends Controller with LazyLogging {
 
+  import gie.yabb.app.executionContext
+
   $scope.asInstanceOf[js.Dynamic].data = new RegistrationFormScope().asInstanceOf[js.Object]
   $scope.asInstanceOf[js.Dynamic].minPassword=6
+
+  val alerts = new AlertsHolder()
+  val busy = new BusyHolder()
 
   def register(formData: RegistrationFormScope): Unit ={
     val firstName = formData.firstName.toOption
@@ -33,11 +39,34 @@ class RegistrationController(authenticationService: AuthenticationService, $scop
       password    <-formData.password
       password2   <-formData.password2
     } yield ( RegistrationRequest(AuthenticationRequest(login, password), firstName, lastName, email), password2)).toOption.fold{
-      logger.error(s"Internal decoding of form data have failed: ${formData}")
+      alerts.addError(logger)( s"Internal decoding of form data have failed: ${formData}" )
     }{ case(request, password2)=>
-        logger.debug( s"SERVER READY REQUEST: ${request}" )
 
+      logger.debug( s"SERVER READY REQUEST: ${request}" )
+
+      assume(request.authentication.password==password2)
+
+      busy.incBusy()
+
+      authenticationService.register(request).onComplete{ result=>
+        busy.decBusy()
+
+        result match {
+          case Failure(ex)=>
+            alerts.addError(logger)(s"Error while processing registration: ${ex.toString}")
+
+          case Success(RegistrationResponse(Left(failureInfo))) =>
+            alerts.addError(logger)(s"Registration failure: ${failureInfo}")
+
+          case Success(RegistrationResponse(Right(registrationInfo))) =>
+            logger.debug(s"registration queued with: ${registrationInfo}")
+        }
+
+        $scope.$apply()
+      }
     }
+
+
   }
 
 

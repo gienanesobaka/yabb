@@ -19,6 +19,7 @@ object serverApi {
   object api {
     object authentication {
       val authenticate = s"${prefix}authentication/authenticate"
+      val register = s"${prefix}authentication/register"
     }
   }
 }
