@@ -26,7 +26,6 @@ class AuthenticationService(marshallingService: MarshallingService) extends Serv
 
   def authenticate(login: String, password: String): Future[AuthenticationResponse] = synchronized {
 
-
     marshallingService
       .postRequest[AuthenticationRequest, AuthenticationResponse](serverApi.api.authentication.authenticate, AuthenticationRequest(login, password))
       .map{v=>self.synchronized{ if(v.isAuthenticated) m_authenticatedLogin = Some(login) else m_authenticatedLogin=None}; v}

@@ -47,13 +47,13 @@
 
         </div>
 
-
-        <div ng-if="controller.authError!==''" class="panel-footer">
-            <div class="alert alert-error">
-                <span>
-                    {{controller.authError}}
-                </span>
-            </div>
+        <div ng-if="controller.alerts.isAlerted()" class="panel-footer">
+            <alert ng-repeat="alert in controller.alerts.all()"
+                   type="{{alert.type}}"
+                   close="controller.alerts.close($index)"
+                   dismiss-on-timeout="{{alert.timeout}}">
+                {{alert.msg}}
+            </alert>
         </div>
 
     </div>

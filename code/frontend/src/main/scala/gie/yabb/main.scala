@@ -1,6 +1,7 @@
 package gie.yabb
 
 
+import biz.enef.angulate.core.Location
 import biz.enef.angulate.ext.{Route, RouteProvider}
 
 import biz.enef.angulate._
@@ -22,7 +23,17 @@ object serverApi {
   }
 }
 
+
 object app extends JSApp with LazyLogging {
+
+  object route {
+    object register {
+      def navigate()(implicit location: Location): Unit ={
+        location.path("register")
+      }
+
+    }
+  }
 
   implicit val executionContext = scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
