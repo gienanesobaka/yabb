@@ -14,6 +14,8 @@ class RegistrationInfo(tag: Tag) extends Table[yabb.RegistrationInfo](tag, "REGI
 
   def * = (id, userId,activationMagic) <> (yabb.RegistrationInfo.tupled, yabb.RegistrationInfo.unapply)
 
+  def index_activationMagic = index(s"INDEX_${tableName}_ACTIVATION_MAGIC", activationMagic, unique = false)
+
   def fk_user = foreignKey(s"FK_${tableName}_USER", userId, User.q)(_.id)
 }
 
