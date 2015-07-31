@@ -61,7 +61,13 @@ class Database(connectionURL: String)(implicit executor: ExecutionContext) exten
   }
 
   def ctor(): Unit ={
-    val createTablesAction = SlickProfile.createIfNotExists(mappings.User.q, mappings.UserPrivilege.q, mappings.RegistrationInfo.q)
+
+    val createTablesAction = SlickProfile.createIfNotExists(
+      mappings.User.q,
+      mappings.UserPrivilege.q,
+      mappings.RegistrationInfo.q,
+      mappings.Category.q)
+
     Await.result( db.run(DBIO.seq(SlickProfile.setSerializableForTransaction, createTablesAction, createAdminAccount()).transactionally), 30.seconds)
   }
 
