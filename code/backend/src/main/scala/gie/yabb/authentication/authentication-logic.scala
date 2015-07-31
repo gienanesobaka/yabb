@@ -14,9 +14,15 @@ trait AuthenticationLogic {
       if(request.login.isEmpty || request.password.isEmpty) {
         AuthenticationResponse(false)
       } else {
-        dao.selectUserWithPrivileges(request.login).filter{ case (u,p) => u.password==request.password}
-          .map{ case (u,p) => buildSessionUserToken(u,p) }
-          .fold{AuthenticationResponse(false)}{token=> currentUser(token); AuthenticationResponse(true)}
+        dao.selectUserWithPrivileges(request.login).filter{ case (u,p) => u.password==request.password}.map{ case (u,p) =>
+          logger.info(s"Successfully logged in: ${request}")
+          buildSessionUserToken(u,p)
+        }.fold{
+          logger.warn(s"Failed to log in: ${request}")
+          AuthenticationResponse(false)
+        }{token=>
+          currentUser(token); AuthenticationResponse(true)
+        }
       }
 
     }

@@ -21,6 +21,11 @@ object authentication extends RestHelper with StrictLogging{
 
     case req@Req("app" :: "api" :: "authentication" :: "register" :: Nil, _, PostRequest)=>
       app.handleRequest[RegistrationRequest, RegistrationResponse](req.body)(logger)(app.registration.register(_))
+
+    case req@Req("app" :: "api" :: "authentication" :: "confirm" :: gie.UUID(id) :: Nil, _, GetRequest)=>
+      logger.debug(s"CONFIRMATION CHECK REQUEST FOR: ${id}")
+      app.handleGETRequest[Boolean](logger)(app.registration.confirm(id))
+
   }
 
 }

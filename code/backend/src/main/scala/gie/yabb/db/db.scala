@@ -108,4 +108,28 @@ class Database(connectionURL: String)(implicit executor: ExecutionContext) exten
   }
 
 
+  def getRegistrationInfo(cookie: UUID) = {
+    mappings.RegistrationInfo.q.filter(_.activationMagic===cookie).result.headOption
+  }
+
+  def setActiveForUser(id:Long, state: Boolean) = {
+    mappings.User.q.filter(_.id===id).map(_.active).update(state)
+  }
+
+  def deleteRegistrationInfo(id: Long) = {
+    mappings.RegistrationInfo.q.filter(_.id===id).delete
+  }
+
+  def activateUser(cookie: UUID) = {
+    type TTT = DBIOAction[Boolean, NoStream, Effect.Write]
+    getRegistrationInfo(cookie).flatMap{ _.fold[TTT]{DBIO.successful(false)}{ activationInfo=>
+      setActiveForUser(activationInfo.userId, true).flatMap{c=>assume(c==1)
+        deleteRegistrationInfo(activationInfo.id).flatMap{c=>assume(c==1);
+          logger.info(s"Activated user with id: ${activationInfo.userId}")
+          DBIO.successful(true)}
+      }
+    }}
+  }
+
+
 }

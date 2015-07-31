@@ -1,5 +1,7 @@
 package gie.yabb
 
+import java.util.UUID
+
 import com.typesafe.scalalogging.StrictLogging
 import gie.yabb.bm.User
 import gie.yabb.db.DbException
@@ -12,6 +14,12 @@ class LoginExistsException() extends DbException
 trait RegistrationLogic {
 
   class RegistrationImpl extends StrictLogging {
+
+    def confirm(cookie: UUID): Boolean ={
+      logger.debug(s"PROCESSING CONFIRMATION COOKIE REQUEST: ${cookie}")
+
+      app.dao.activateUser(cookie)
+    }
     
     def register(request: RegistrationRequest): RegistrationResponse ={
       logger.debug(s"GOT REGISTRATION REQUEST: ${request}")
@@ -28,9 +36,12 @@ trait RegistrationLogic {
             RegistrationResponse(Right(RegistrationResponseSuccess(registrationInfo.activationMagic)))
         }
       } catch {
-        case e:DbException=>
+        case e:LoginExistsException=>
           logger.info(s"failure while processing db request: ${e.toString}")
           RegistrationResponse(Left(RegistrationResponseFailure(RegistrationStatusCodes.invalidLogin, "Invalid login")))
+        case e:DbException=>
+          logger.error(s"failure while processing db request: ${e.toString}")
+          RegistrationResponse(Left(RegistrationResponseFailure(RegistrationStatusCodes.unknownFailure, "Invalid login")))
         case e:Exception=>
           logger.error(s"unknown failure while processing db request: ${e.toString}")
           RegistrationResponse(Left(RegistrationResponseFailure(RegistrationStatusCodes.unknownFailure, "FAILED!")))

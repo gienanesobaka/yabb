@@ -26,7 +26,14 @@ object YRestHelper {
 
   def requestToResponse[T: Reader, R: Writer](body: Box[String])(logger : =>Logger)(handler: T=>R): LiftResponse = {
 
-    val response = body.flatMap{v=>tryo( read[T](v) )}.flatMap( v=>tryo(handler(v)) )
+    transformBoxedResponse(logger){
+      body.flatMap{v=>tryo( read[T](v) )}.flatMap( v=>tryo(handler(v)) )
+    }
+
+  }
+
+  def transformBoxedResponse[R: Writer](logger : =>Logger)(lazyResponse: =>Box[R]): LiftResponse = {
+    val response = lazyResponse
 
     response match {
 
@@ -41,7 +48,6 @@ object YRestHelper {
 
         BadResponse()
     }
-
   }
 
 }
@@ -53,6 +59,13 @@ trait MarshallerServiceTrait {
                                          (logger : =>Logger)
                                          (handler: T=>R) :LiftResponse = {
     requestToResponse[T, R](messageData)(logger){ handler }
+  }
+
+
+  def handleGETRequest[R: Writer](logger : =>Logger)
+                       (handler: =>R) :LiftResponse = {
+
+    transformBoxedResponse(logger){ tryo(handler) }
   }
 
 }

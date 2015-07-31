@@ -1,5 +1,7 @@
 package gie.yabb
 
+import java.util.UUID
+
 import com.typesafe.scalalogging.StrictLogging
 import gie.utils.prop.{WithMemo, PropsFromClassLoaderBundle, Configuration}
 import gie.yabb.bm.{User, UserPrivilege}
@@ -47,6 +49,11 @@ object app
     def enqueueUserRegistration(user: User) = {
       Await.result(run{ db.enqueueUserRegistration(user).transactionally}, dbAccessTimeout)
     }
+
+    def activateUser(cookie: UUID) = {
+      Await.result(run{ db.activateUser(cookie).transactionally}, dbAccessTimeout)
+    }
+
   }
 
 }
