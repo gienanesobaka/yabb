@@ -17,7 +17,7 @@ object authentication extends RestHelper with StrictLogging{
 
   serve {
     case req@Req("app" :: "api" :: "authentication" :: "authenticate" :: Nil, _, PostRequest)=>
-      app.handleRequest[AuthenticationRequest, AuthenticationResponse](req.body)(logger)(app.authenticate(_))
+      app.handleRequest[AuthenticationRequest, AuthenticationResponse](req.body)(logger)(app.authentication.authenticate(_))
 
     case req@Req("app" :: "api" :: "authentication" :: "register" :: Nil, _, PostRequest)=>
       app.handleRequest[RegistrationRequest, RegistrationResponse](req.body)(logger)(app.registration.register(_))

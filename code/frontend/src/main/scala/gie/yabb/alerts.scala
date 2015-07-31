@@ -56,4 +56,9 @@ class AlertsHolder() extends LazyLogging {
     addDanger(msg, timeout)
   }
 
+  def addInfo(logger: => Logger)(msg: String, timeout: Int = errorTimeOut): Unit = {
+    logger.info(msg)
+    add(AlertsTypes.info, msg, timeout)
+  }
+
 }

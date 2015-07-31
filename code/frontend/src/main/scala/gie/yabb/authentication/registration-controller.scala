@@ -59,7 +59,7 @@ class RegistrationController(authenticationService: AuthenticationService, $scop
             alerts.addError(logger)(s"Registration failure: ${failureInfo}")
 
           case Success(RegistrationResponse(Right(registrationInfo))) =>
-            logger.debug(s"registration queued with: ${registrationInfo}")
+            alerts.addInfo(logger)(s"Successfully enqueued for registration, confirmation cookie is: ${registrationInfo.confirmationCookie}")
         }
 
         $scope.$apply()

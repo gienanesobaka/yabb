@@ -11,7 +11,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 
-object app extends StrictLogging with MarshallerServiceTrait with RegistrationLogic {
+object app
+  extends StrictLogging
+  with MarshallerServiceTrait
+  with RegistrationLogic
+  with AuthenticationLogic{
 
   implicit object config extends Configuration( new PropsFromClassLoaderBundle("application.properties") with WithMemo )
 
@@ -27,21 +31,6 @@ object app extends StrictLogging with MarshallerServiceTrait with RegistrationLo
     db.close()
   }
 
-  def authenticate(request: AuthenticationRequest): AuthenticationResponse = {
-
-    if(request.login.isEmpty || request.password.isEmpty) {
-      AuthenticationResponse(false)
-    } else {
-      dao.selectUserWithPrivileges(request.login).filter{ case (u,p) => u.password==request.password}
-        .map{ case (u,p) => buildSessionUserToken(u,p) }
-        .fold{AuthenticationResponse(false)}{token=> currentUser(token); AuthenticationResponse(true)}
-    }
-
-  }
-
-  private def buildSessionUserToken(user: User, privileges: Seq[UserPrivilege]) ={
-    SessionUserToken(user, privileges.map(dbPriv=>UserPrivilegeImpl(dbPriv.id)).toSet)
-  }
 
   object dao {
 
@@ -53,6 +42,10 @@ object app extends StrictLogging with MarshallerServiceTrait with RegistrationLo
 
     def selectUserWithPrivileges(name: String) = {
       Await.result(run{ db.selectUserWithPrivileges(name).transactionally}, dbAccessTimeout)
+    }
+
+    def enqueueUserRegistration(user: User) = {
+      Await.result(run{ db.enqueueUserRegistration(user).transactionally}, dbAccessTimeout)
     }
   }
 
