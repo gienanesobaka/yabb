@@ -7,7 +7,7 @@
         <script type="text/javascript" src="js/yabb-frontend-launcher.js"></script>
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-
+        <link rel="stylesheet" href="css/abn_tree.css">
 
         <style>
             .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
@@ -17,16 +17,16 @@
     <body ng-app="gie.yabb">
 
         <div class="container-fluid">
-            <div ng-controller="gie.yabb.TestController as ctrl">
+            <!--<div ng-controller="gie.yabb.TestController as ctrl">-->
 
-                <button onclick="gie.yabb.app().clickedButton()">Button</button>
-                <button ng-click="ctrl.printMsg()">Button</button>
-                <p>Enter Name: <input type="text" ng-model="ctrl.msg"> </p>
-                <p>Hello {{ctrl.msg}}!!</p>
+                <!--<button onclick="gie.yabb.app().clickedButton()">Button</button>-->
+                <!--<button ng-click="ctrl.printMsg()">Button</button>-->
+                <!--<p>Enter Name: <input type="text" ng-model="ctrl.msg"> </p>-->
+                <!--<p>Hello {{ctrl.msg}}!!</p>-->
 
-            </div>
+            <!--</div>-->
 
-            <hr/>
+            <!--<hr/>-->
 
             <div ng-view></div>
         </div>

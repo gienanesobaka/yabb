@@ -57,6 +57,7 @@ object app extends JSApp with LazyLogging {
       .controllerOf[TestController]
       .controllerOf[RegistrationController]
       .controllerOf[MainAuthenticationController]
+      .controllerOf[CategoryEditorController]
 
 
     module.config{ ($routeProvider: RouteProvider)=>
@@ -65,6 +66,8 @@ object app extends JSApp with LazyLogging {
           Route(templateUrl = s"${parts}/authentication.html", controllerAs = "controller", controller = classOf[MainAuthenticationController].getName))
         .when("/register",
           Route(templateUrl = s"${parts}/register.html", controllerAs = "controller", controller = classOf[RegistrationController].getName))
+        .when("/admin/category-editor",
+          Route(templateUrl = s"${parts}/admin-categoty-editor.html", controllerAs = "categoryEditorController", controller = classOf[CategoryEditorController].getName))
         .otherwise(
           Route(redirectTo = "/"))
     }
