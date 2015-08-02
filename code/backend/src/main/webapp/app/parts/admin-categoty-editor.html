@@ -1,5 +1,24 @@
 <div>
+    <!--categoryEditorController-->
+    <div class="row">
+        Selected: {{categoryEditorController.selected.label}}
+    </div>
 
-category editor
+    <div class="row">
+        <abn-tree class="col-md-5"
+                tree-data       = "categoryEditorController.data"
+                icon-leaf       = "glyphicon glyphicon-asterisk"
+                icon-expand     = "glyphicon glyphicon-plus"
+                icon-collapse   = "glyphicon glyphicon-minus"
+                on-select       = "categoryEditorController.onSelect(branch)">
+        </abn-tree>
+
+        <div>
+            <button type="button" ng-click="categoryEditorController.add()" class="btn">Add</button>
+            <button type="button" ng-click="categoryEditorController.delete()"class="btn">Delete</button>
+            <button type="button" ng-click="categoryEditorController.rename()"class="btn">Rename</button>
+        </div>
+
+    </div>
 
 </div>

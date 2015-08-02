@@ -47,7 +47,7 @@ object app extends JSApp with LazyLogging {
 
     logger.info("gie.yabb.app.main()")
 
-    val module = angular.createModule("gie.yabb", Seq("ngCookies", "ngRoute", "ui.validate", "ui.bootstrap"))
+    val module = angular.createModule("gie.yabb", Seq("ngCookies", "ngRoute", "angularBootstrapNavTree", "ui.validate", "ui.bootstrap"))
 
     module
       .serviceOf[MarshallingService]
