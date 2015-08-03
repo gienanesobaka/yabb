@@ -33,7 +33,7 @@ jsDependencies += ProvidedJS / "bootstrap.min.js" dependsOn "jquery.min.js"
 
 jsDependencies += ProvidedJS / "ui-bootstrap.min.js" dependsOn ("angular.min.js","bootstrap.min.js")
 
-jsDependencies += ProvidedJS / "abn_tree_directive.js" dependsOn ("angular.min.js","bootstrap.min.js")
+jsDependencies += ProvidedJS / "angular-tree-control.js" dependsOn ("angular.min.js","bootstrap.min.js")
 
 persistLauncher in Compile := true
 skip in packageJSDependencies := false

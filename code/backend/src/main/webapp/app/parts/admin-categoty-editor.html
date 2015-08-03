@@ -5,13 +5,12 @@
     </div>
 
     <div class="row">
-        <abn-tree class="col-md-5"
-                tree-data       = "categoryEditorController.data"
-                icon-leaf       = "glyphicon glyphicon-asterisk"
-                icon-expand     = "glyphicon glyphicon-plus"
-                icon-collapse   = "glyphicon glyphicon-minus"
-                on-select       = "categoryEditorController.onSelect(branch)">
-        </abn-tree>
+        <treecontrol class="tree-classic col-md-5"
+                tree-model      = "categoryEditorController.data"
+                options         = "categoryEditorController.treeOptions"
+                on-selection    = "categoryEditorController.onSelect(node)">
+                {{node.label}}
+        </treecontrol>
 
         <div>
             <button type="button" ng-click="categoryEditorController.add()" class="btn">Add</button>
