@@ -115,8 +115,12 @@ class CategoryEditorController($scope:Scope) extends Controller with LazyLogging
     }
   }
 
+  def submitTransaction(): Unit ={
+    val commandBuffer = prepareCommandBuffer()
+  }
 
-  private def prepareCommandBuffer(): Unit ={
+
+  private def prepareCommandBuffer() ={
 
     type ComplexNodeId = Option[Either[UUID, Long]]
 
@@ -132,23 +136,42 @@ class CategoryEditorController($scope:Scope) extends Controller with LazyLogging
     def processNode(node: CategoryNode, parentNodeId: ComplexNodeId): Unit ={
 
       node.state match {
-        case CategoryNodeState.Clean() => logger.debug(s"node '${node.label}' is clean")
-        case CategoryNodeState.New()   => processNode_new(node, parentNodeId)
-        case CategoryNodeState.Dirty() => processNode_dirty(node, parentNodeId)
+        case CategoryNodeState.Clean() => processNode_clean(node, parentNodeId);  processChildrenOf(node)
+        case CategoryNodeState.New()   => processNode_new(node, parentNodeId);    processChildrenOf(node)
+        case CategoryNodeState.Dirty() => processNode_dirty(node, parentNodeId);  processChildrenOf(node)
       }
 
     }
 
+    def processNode_clean(node: CategoryNode, parentNodeId: ComplexNodeId): Unit = {
+      logger.debug(s"node '${node.label}' is clean")
+
+    }
+
+
     def processNode_new(node: CategoryNode, parentNodeId: ComplexNodeId): Unit ={
-      commandBuffer += CategoryCommand(CategoryMagic.command.create, name = Some(node.label) )
+
+      commandBuffer += CategoryCommand(
+        command   = CategoryMagic.command.create,
+        nodeId    = node.id,
+        parentId  = parentNodeId,
+        name      = Some(node.label) )
+
     }
 
     def processNode_dirty(node: CategoryNode, parentNodeId: ComplexNodeId): Unit ={
+
+      commandBuffer += CategoryCommand(
+        command   = CategoryMagic.command.rename,
+        nodeId    = node.id,
+        parentId  = parentNodeId,
+        name      = Some(node.label) )
 
     }
 
     processChildrenOf(rootNode)
 
+    commandBuffer
   }
 
 }

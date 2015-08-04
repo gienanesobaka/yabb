@@ -16,10 +16,7 @@ object CategoryMagic {
 
 }
 
-
-
-
-case class CategoryCommand(command: Int, nodeId: Option[Long] = None, parentId:Option[Either[UUID, Long]] = None, name: Option[String] = None)
+case class CategoryCommand(command: Int, nodeId: Either[UUID, Long], parentId:Option[Either[UUID, Long]], name: Option[String] = None)
 
 
 
