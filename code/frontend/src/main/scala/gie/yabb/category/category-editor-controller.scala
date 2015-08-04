@@ -2,61 +2,111 @@ package gie.yabb
 
 import biz.enef.angulate.{Scope, Controller}
 import slogging.LazyLogging
+import scala.collection.mutable.ArrayBuffer
+import scala.scalajs.js.Dynamic.literal
 import scala.scalajs.js.{Array}
 import scala.util.Random
 import scalajs.js
 import js.JSConverters._
-import scala.scalajs.js.annotation.JSExportAll
+import scala.scalajs.js.annotation.{JSExport, JSExportAll}
+import gie.utils.ImplicitPipe._
 
 @JSExportAll
-class Item[T](var p_label:String,
-              p_children:Seq[Item[T]] = Seq(),
-              p_data:Option[T]=None,
-              p_onSelect:Option[Item[T]=>Unit] = None,
-              p_classes:Option[String]=None){
+abstract class Item[SelfT <: Item[_]](p_children:Seq[Item[SelfT]] = Seq()){
 
-  var label = p_label
-  var children:js.Array[Item[T]] = p_children.toJSArray
-  var data:js.UndefOr[T] = p_data.orUndefined
-  var onSelect:js.UndefOr[js.Function1[Item[T], Unit]] = p_onSelect.map( js.Any.fromFunction1(_) ).orUndefined
-  var classes:js.UndefOr[String] = p_classes.orUndefined
+  var label:String
+  var children:js.Array[Item[SelfT]] = p_children.toJSArray
 
 }
 
+class CategoryNode(var cat:Category, children:Seq[CategoryNode]=Seq()) extends Item[CategoryNode](children){
+  override def label:String = cat.name
+  override def label_=(name:String): Unit ={
+    cat = cat.copy(name = name)
+  }
+
+  def isDirty = cat.id==CategoryMagic.catIdDirty
+  def isNew = cat.id==CategoryMagic.catIdNew
+  def id = {
+    assume(cat.id>=0)
+    cat.id
+  }
+
+  val deleteQueue = ArrayBuffer[CategoryNode]()
+}
+
+
 class CategoryEditorController($scope:Scope) extends Controller with LazyLogging {
 
-  type Node = Item[Unit]
+  type Node = CategoryNode
 
   logger.debug("CategoryEditorController.ctor()")
 
-  def onSelect(p: Item[Unit]) = {
-    selected = Some(p).orUndefined
+
+  $scope.asInstanceOf[js.Dynamic].treeOptions = literal(
+    equality = (n1:js.Any, n2:js.Any) => n1 eq n2
+  )
+
+  private var selected:Option[Tuple2[Node,Node]] = None
+
+  def onSelect(p: Node, parentNode:Node) = {
+    selected = Some(p, parentNode)
+    nodeLabel = p.label
   }
 
-  val rootNode = new Node("[ROOT]")
+  private val rootNode = new Node(Category(0, None, "[ROOT]"))
 
   var data:js.Array[Node] = Array(rootNode).toJSArray
-  var selected:js.UndefOr[Node] = None.orUndefined
+
+  var nodeLabel=""
+  var newNodeLabel=""
 
   def add(): Unit ={
-    selected.toOption.orElse(Some(rootNode)).foreach{node=>
-      node.children.push( new Node(s"Lalalo ${Random.nextInt()}") )
+
+    val newNodeName = newNodeLabel
+
+    selected
+      .orElse(Some(rootNode,null))
+      .filter(_ => !newNodeLabel.isEmpty)
+      .filter{ case(node, parent) => !node.children.find(_.label==newNodeName).isDefined }
+      .foreach{ case(node,parent)=>
+
+      Category(CategoryMagic.catIdNew, None, newNodeLabel) |>
+        (d=>new Node(d)) |>
+        (node.children.push(_))
+
     }
   }
 
   def rename(): Unit ={
-    selected.toOption.filter(_!=rootNode).fold{
-      logger.debug("nothing to rename")
-    }{node=>
+    import CategoryMagic._
 
+    selected.filter{ case(node, parent)=>node ne rootNode }.fold{
+      logger.debug("nothing to rename")
+    }{ case(node, parentNode)=>
+
+        node.cat = node.cat.copy(id = if(node.cat.id==catIdNew) catIdNew else catIdDirty, name = nodeLabel)
+
+        logger.debug(s"${node.cat}")
     }
   }
 
   def delete(): Unit ={
-    selected.toOption.filter(_!=rootNode).fold{
+    selected.filter{ case(node, parent)=>node ne rootNode }.fold{
       logger.debug("nothing to delete")
-    }{node=>
+    }{ case(node, parentNode)=>
 
+      val peers = parentNode.children
+      val idx = peers.indexOf(node); assume(idx != -1)
+      peers.remove(idx)
+
+      if(node.isNew){
+        logger.debug(s"Node '${node.label}' is new, no need to record 'delete' operation.")
+      } else {
+        parentNode.deleteQueue += node
+      }
+
+      selected = None
     }
   }
 
